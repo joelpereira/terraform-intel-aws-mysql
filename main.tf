@@ -58,9 +58,20 @@ resource "aws_db_parameter_group" "rds" {
   }
 }
 
+# Use ICO / Densify recommendation if present
+module "densify" {
+  source  = "densify-dev/optimization-as-code/null"
+
+  densify_recommendations = var.densify_recommendations
+  # use the fallback (passed in instance_class) when there is no recommendation found.
+  densify_fallback = { currentType = var.instance_class, recommendedType = var.instance_class, approvalType="na" }
+  densify_unique_id = var.rds_identifier
+  # densify_unique_id = var.aws_database_instance_identifier
+}
+
 resource "aws_db_instance" "rds" {
   identifier     = var.rds_identifier
-  instance_class = var.instance_class
+  instance_class = module.densify.instance_type
 
   # General
   db_name              = var.db_name

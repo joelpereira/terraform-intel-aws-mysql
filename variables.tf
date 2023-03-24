@@ -16,6 +16,12 @@ variable "instance_class" {
   default     = "db.m6i.2xlarge"
 }
 
+# Intel Cloud Optimizer (Densify) variable(s)
+variable "densify_recommendations" {
+  type = map(map(string))
+  default = {}
+}
+
 variable "db_parameters" {
   type = object({
     mysql = object({
